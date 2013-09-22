@@ -15,6 +15,12 @@ This project will require
 * SqlCe 4.0 (or if you want SqlServer, or anything which has Entity Framework Support)
 * Internet.
 
+## Sources ##
+I'm using [RFC 1459](http://tools.ietf.org/html/rfc1459) for basic implementations of IRC protocol.
+
+## Idea behind ##
+I want to create a IRC server which is independent of any external service (may be I'll write kind of plugin interface).
+
 ## License ##
 .. is to be decided.
 Will look out for one.
