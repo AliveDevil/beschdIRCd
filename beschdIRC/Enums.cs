@@ -6,73 +6,15 @@ using System.Threading.Tasks;
 
 namespace beschdIRC {
 	/// <summary>
-	/// siehe http://tools.ietf.org/html/rfc1459.html#section-6.1
-	/// </summary>
-	public enum ErrorCodes {
-		None = 0,
-
-		NoSuchNick = 401, // so einen Nick gibt es nicht.
-		NoSuchServer = 402, // so einen Server gibt es nicht.
-		NoSuchChannel = 403, // so einen channel gibt es nicht.
-		CannotSendToChan = 404, // du kannst nicht in diesen Channel senden
-		TooManychannels = 405, // du bist in zuvielen Channeln
-		WasNoSuchNick = 406,
-		TooManytargets = 407, // du hast jemanden doppelt angegeben
-		NoOrigin = 409, // keine Quelle
-
-		NoRecipient = 411, // kein Empfänger
-		NoTextToSend = 412, // kann nichts senden
-		NoTopLevel = 413, // domain ist nicht domain.tld
-		WildTopLevel = 414, // domain ist *.domain.tld
-
-		UnknownCommand = 421, // unbekannter Command
-		NoMotd = 422, // kein MOTD
-		NoAdminInfo = 423, // keine AdminInfo
-		FileError = 424, // kann eine Datei nicht lesen
-
-		NoNicknameGiven = 431, // du hast keinen Nick angegeben
-		ErroneusNickname = 432, // der Nickname kollidiert mit den Namensregeln
-		NicknameInUse = 433, // der Name ist bereits in benutzung
-		NickCollision = 436, // der Nick kollidiert auf einem anderen Server
-
-		UserNotInChannel = 441, // der User ist nicht da.
-		NotOnChannel = 442, // du bist nicht in einem Channel
-		UserOnChannel = 443, // du bist in diesem Channel
-		NoLogin = 444, // log dich ein, Idiot
-		SummonDisabled = 445, // du darfst niemanden inviten
-		UsersDisabled = 446, // du kannst die dir Liste nicht anschauen
-
-		NotRegistered = 451, // registrieren oder hier passiert nichts
-
-		NeedMoreParams = 461, // du hast zu wenig angegeben, ICH WILL MEHR!
-		AlreadyRegistered = 462, // lern deine Commands auswendig
-		NoPermForHost = 463, // du bist zu dumm
-		PasswDismatch = 464, // wo hast du dein Passwort geschrieben?
-		YoureBannedCreep = 465, // es gibt einen Grund, warum du hier nicht mehr raufkommst
-		Keyset = 467, // und nein.
-
-		ChannelIsFull = 471, // wirf jemanden raus, bevor du reingehen kannst
-		UnknownMode = 472, // wat?
-		InviteOnlyChan = 473, // nope. Nur mit Einladung
-		BannedFromChan = 474, // du bist gebannt.
-		BadChannelKey = 475, // das gibts schon.
-
-		NoPrivileges = 481, // komm wieder, wenne weißt, warum du das nicht darfst
-		ChanOpPrivsNeeded = 482, // nein. Du bist nicht ich
-		CantKillServer = 483, // hättest du wohl gerne
-
-		NoOperHost = 491, // kein Oper, Depp!
-
-		UModeUnknownFlag = 501, // irgendwas unbekanntes
-		UsersDontMatch = 502 // da passt was nicht
-	}
-
-	/// <summary>
-	/// siehe http://tools.ietf.org/html/rfc1459.html#section-6.2
+	/// see http://tools.ietf.org/html/rfc1459.html#section-6.2
 	/// </summary>
 	public enum ReplyCodes {
+		/// <summary>
+		/// Just a dummy.
+		/// </summary>
 		None = 300,
 
+		#region Away
 		/// <summary>
 		/// <para>everyone (except channels) who PRIVMSGs connection</para>
 		/// <para>&lt;nick&gt; :&lt;message&gt;</para>
@@ -86,7 +28,26 @@ namespace beschdIRC {
 		/// </para>
 		/// </remarks>
 		Away = 301,
-
+		/// <summary>
+		/// <para>current connection</para>
+		/// <para>:You are no longer marked as being away</para>
+		/// </summary>
+		/// <remarks>
+		/// <para>Reply format used by USERHOST to list replies to the query list.  The reply string is composed as follows:</para>
+		/// <para>The '*' indicates whether the client has registered as an Operator.  The '-' or '+' characters represent whether the client has set an AWAY message or not respectively.</para>
+		/// <para>Issued by AWAY</para>
+		/// </remarks>
+		Unaway = 305,
+		/// <summary>
+		/// <para>current connection</para>
+		/// <para>:You have been marked as being away</para>
+		/// </summary>
+		/// <remarks>
+		/// <para>These replies are used with the AWAY command (if allowed).  AWAY is sent to any client sending a PRIVMSG to a client which is away.  AWAY is only sent by the server to which the client is connected. Replies UNAWAY and NOWAWAY are sent when the client removes and sets an AWAY message.</para>
+		/// <para>Issued by AWAY :&lt;message&gt;</para>
+		/// </remarks>
+		NowAway = 306,
+		#endregion
 		/// <summary>
 		/// <para>current connection</para>
 		/// <para>Reply = &lt;nickname&gt; (Operator ? * : '') = (away ? + : -)&lt;hostname&gt;</para>
@@ -111,26 +72,7 @@ namespace beschdIRC {
 		/// </remarks>
 		IsOn = 303,
 
-		/// <summary>
-		/// <para>current connection</para>
-		/// <para>:You are no longer marked as being away</para>
-		/// </summary>
-		/// <remarks>
-		/// <para>Reply format used by USERHOST to list replies to the query list.  The reply string is composed as follows:</para>
-		/// <para>The '*' indicates whether the client has registered as an Operator.  The '-' or '+' characters represent whether the client has set an AWAY message or not respectively.</para>
-		/// <para>Issued by AWAY</para>
-		/// </remarks>
-		Unaway = 305,
 
-		/// <summary>
-		/// <para>current connection</para>
-		/// <para>:You have been marked as being away</para>
-		/// </summary>
-		/// <remarks>
-		/// <para>These replies are used with the AWAY command (if allowed).  AWAY is sent to any client sending a PRIVMSG to a client which is away.  AWAY is only sent by the server to which the client is connected. Replies UNAWAY and NOWAWAY are sent when the client removes and sets an AWAY message.</para>
-		/// <para>Issued by AWAY :&lt;message&gt;</para>
-		/// </remarks>
-		NowAway = 306,
 
 		/// <summary>
 		/// <para>current connection</para>
@@ -180,6 +122,6 @@ namespace beschdIRC {
 		/// <remarks>
 		/// 
 		/// </remarks>
-		EndOfWhoWas = 368,
+		EndOfWhoWas = 369,
 	}
 }

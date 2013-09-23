@@ -16,56 +16,56 @@ using System.Threading.Tasks;
 
 namespace beschdIRC {
 	public class Server {
-		#region Error-Nachrichten
+		#region Error-Messages
 		Dictionary<ErrorCodes, string> errorMessages = new Dictionary<ErrorCodes, string>
 		{
-			{ ErrorCodes.NoSuchNick, "<nickname> :No such nick/channel" },
-			{ ErrorCodes.NoSuchServer, "<servername> :No such server" },
-			{ ErrorCodes.NoSuchChannel, "<channelname> :No such channel" },
-			{ ErrorCodes.CannotSendToChan, "<channelname> :Cannot send to channel" },
-			{ ErrorCodes.TooManychannels, "<channelname> :You have joined too many channels" },
-			{ ErrorCodes.WasNoSuchNick, "<nickname> :There was no such nickname" },
-			{ ErrorCodes.TooManytargets, "<target> :Duplicate recipients. No message delivered" },
-			{ ErrorCodes.NoOrigin, ":No origin specified" },
-			{ ErrorCodes.NoRecipient, ":No recipient given (<command>)" },
-			{ ErrorCodes.NoTextToSend, ":No text to send" },
-			{ ErrorCodes.NoTopLevel, "<mask> :No toplevel domain specified" },
-			{ ErrorCodes.WildTopLevel, "<mask> :Wildcard in toplevel domain" },
-			{ ErrorCodes.UnknownCommand, "<command> :Unknown command" },
-			{ ErrorCodes.NoMotd, ":MOTD File is missing" },
-			{ ErrorCodes.NoAdminInfo, "<server> :No administrative info available" },
-			{ ErrorCodes.FileError, ":File error doing <fileop> on <file>" },
-			{ ErrorCodes.NoNicknameGiven, ":No nickname given" },
-			{ ErrorCodes.ErroneusNickname, "<nickname> :Erroneus nickname" },
-			{ ErrorCodes.NicknameInUse, "<nickname> :Nickname is already in use" },
-			{ ErrorCodes.NickCollision, "<nickname> :Nickname collision KILL" },
-			{ ErrorCodes.UserNotInChannel, "<nickname> <channel> :They aren't on that channel" },
-			{ ErrorCodes.NotOnChannel, "<channel> :You're not on that channel" },
-			{ ErrorCodes.UserOnChannel, "<nickname> <channel> :is already on channel" },
-			{ ErrorCodes.NoLogin, "<nickname> :User not logged in" },
-			{ ErrorCodes.SummonDisabled, ":SUMMON has been disabled" },
-			{ ErrorCodes.UsersDisabled, ":USERS has been disabled" },
-			{ ErrorCodes.NotRegistered, ":You have not registered" },
-			{ ErrorCodes.NeedMoreParams, "<command> :Not enough parameters" },
-			{ ErrorCodes.AlreadyRegistered, ":You may not reregister" },
-			{ ErrorCodes.NoPermForHost, ":Your host isn't among the privileged" },
-			{ ErrorCodes.PasswDismatch, ":Password incorret" },
-			{ ErrorCodes.YoureBannedCreep, ":You are banned from this server" },
-			{ ErrorCodes.Keyset, "<channel> :Channel key already set" },
-			{ ErrorCodes.ChannelIsFull, "<channel> :Cannot join channel (+l)" },
-			{ ErrorCodes.UnknownMode, "<char> :is unknown mode char to me" },
-			{ ErrorCodes.InviteOnlyChan, "<channel> :Cannot join channel (+i)" },
-			{ ErrorCodes.BannedFromChan, "<channel> :Cannot join channel (+b)" },
-			{ ErrorCodes.BadChannelKey, "<channel> :Cannot join channel (+k)" },
-			{ ErrorCodes.NoPrivileges, ":Permission Denied- You're not an IRC operator" },
-			{ ErrorCodes.ChanOpPrivsNeeded, "<channel> :You're not channel operator" },
-			{ ErrorCodes.CantKillServer, ":You can't kill a server" },
-			{ ErrorCodes.NoOperHost, ":No O-lines for your host" },
-			{ ErrorCodes.UModeUnknownFlag, ":Unknown MODE flag" },
-			{ ErrorCodes.UsersDontMatch, ":Cant change mode for other users" },
+			{ ErrorCodes.NOSUCHNICK, "<nickname> :No such nick/channel" },
+			{ ErrorCodes.NOSUCHSERVER, "<servername> :No such server" },
+			{ ErrorCodes.NOSUCHCHANNEL, "<channelname> :No such channel" },
+			{ ErrorCodes.CANNOTSENDTOCHAN, "<channelname> :Cannot send to channel" },
+			{ ErrorCodes.TOOMANYCHANNELS, "<channelname> :You have joined too many channels" },
+			{ ErrorCodes.WASNOSUCHNICK, "<nickname> :There was no such nickname" },
+			{ ErrorCodes.TOOMANYTARGETS, "<target> :Duplicate recipients. No message delivered" },
+			{ ErrorCodes.NOORIGIN, ":No origin specified" },
+			{ ErrorCodes.NORECIPIENT, ":No recipient given (<command>)" },
+			{ ErrorCodes.NOTEXTTOSEND, ":No text to send" },
+			{ ErrorCodes.NOTOPLEVEL, "<mask> :No toplevel domain specified" },
+			{ ErrorCodes.WILDTOPLEVEL, "<mask> :Wildcard in toplevel domain" },
+			{ ErrorCodes.UNKNOWNCOMMAND, "<command> :Unknown command" },
+			{ ErrorCodes.NOMOTD, ":MOTD File is missing" },
+			{ ErrorCodes.NOADMININFO, "<server> :No administrative info available" },
+			{ ErrorCodes.FILEERROR, ":File error doing <fileop> on <file>" },
+			{ ErrorCodes.NONICKNAMEGIVEN, ":No nickname given" },
+			{ ErrorCodes.ERRONEUSNICKNAME, "<nickname> :Erroneus nickname" },
+			{ ErrorCodes.NICKNAMEINUSE, "<nickname> :Nickname is already in use" },
+			{ ErrorCodes.NICKCOLLISION, "<nickname> :Nickname collision KILL" },
+			{ ErrorCodes.USERNOTINCHANNEL, "<nickname> <channel> :They aren't on that channel" },
+			{ ErrorCodes.NOTONCHANNEL, "<channel> :You're not on that channel" },
+			{ ErrorCodes.USERONCHANNEL, "<nickname> <channel> :is already on channel" },
+			{ ErrorCodes.NOLOGIN, "<nickname> :User not logged in" },
+			{ ErrorCodes.SUMMONDISABLED, ":SUMMON has been disabled" },
+			{ ErrorCodes.USERSDISABLED, ":USERS has been disabled" },
+			{ ErrorCodes.NOTREGISTERED, ":You have not registered" },
+			{ ErrorCodes.NEEDMOREPARAMS, "<command> :Not enough parameters" },
+			{ ErrorCodes.ALREADYREGISTRED, ":You may not reregister" },
+			{ ErrorCodes.NOPERMFORHOST, ":Your host isn't among the privileged" },
+			{ ErrorCodes.PASSWDMISMATCH, ":Password incorret" },
+			{ ErrorCodes.YOUREBANNEDCREEP, ":You are banned from this server" },
+			{ ErrorCodes.KEYSET, "<channel> :Channel key already set" },
+			{ ErrorCodes.CHANNELISFULL, "<channel> :Cannot join channel (+l)" },
+			{ ErrorCodes.UNKNOWNMODE, "<char> :is unknown mode char to me" },
+			{ ErrorCodes.INVITEONLYCHAN, "<channel> :Cannot join channel (+i)" },
+			{ ErrorCodes.BANNEDFROMCHAN, "<channel> :Cannot join channel (+b)" },
+			{ ErrorCodes.BADCHANNELKEY, "<channel> :Cannot join channel (+k)" },
+			{ ErrorCodes.NOPRIVILEGES, ":Permission Denied- You're not an IRC operator" },
+			{ ErrorCodes.CHANOPRIVSNEEDED, "<channel> :You're not channel operator" },
+			{ ErrorCodes.CANTKILLSERVER, ":You can't kill a server" },
+			{ ErrorCodes.NOOPERHOST, ":No O-lines for your host" },
+			{ ErrorCodes.UMODEUNKNOWNFLAG, ":Unknown MODE flag" },
+			{ ErrorCodes.USERSDONTMATCH, ":Cant change mode for other users" },
 		};
 		#endregion
-		#region Reply-Nachrichten
+		#region Reply Messages
 		Dictionary<ReplyCodes, string> replyMessages = new Dictionary<ReplyCodes, string> {
 
 		};
@@ -148,10 +148,10 @@ namespace beschdIRC {
 					LogConnection(connection, "set password");
 					connection.Pass = args[0];
 				} else {
-					Error(connection, ErrorCodes.AlreadyRegistered, new Dictionary<string, string>());
+					Error(connection, ErrorCodes.ALREADYREGISTRED, new Dictionary<string, string>());
 				}
 			} else {
-				Error(connection, ErrorCodes.NeedMoreParams, new Dictionary<string, string> { { "command", "PASS" } });
+				Error(connection, ErrorCodes.NEEDMOREPARAMS, new Dictionary<string, string> { { "command", "PASS" } });
 			}
 		}
 		/// <summary>
@@ -170,10 +170,10 @@ namespace beschdIRC {
 					LogConnection(connection, "set nick to " + args[0]);
 					connection.Nick = args[0];
 				} else {
-					Error(connection, ErrorCodes.NicknameInUse, new Dictionary<string, string> { { "nickname", args[0] } });
+					Error(connection, ErrorCodes.NICKNAMEINUSE, new Dictionary<string, string> { { "nickname", args[0] } });
 				}
 			} else {
-				Error(connection, ErrorCodes.NeedMoreParams, new Dictionary<string, string> { { "command", "NICK" } });
+				Error(connection, ErrorCodes.NEEDMOREPARAMS, new Dictionary<string, string> { { "command", "NICK" } });
 			}
 		}
 		/// <summary>

@@ -18,6 +18,15 @@ This project will require
 ## Sources ##
 I'm using [RFC 1459](http://tools.ietf.org/html/rfc1459) for basic implementations of IRC protocol.
 
+Trying to convert the RFC via RegEx into some enums. Found a working RegEx-Pattern:
+
+Find: `^\s+(\d{3})\s+ERR_(\w+)\r\s+"(.+)"\r\s+- (.*)`
+
+Replace: `{"Name": "$2", "Value": $1, "Description": "$4", "Remarks": ["$3"], "Results": [], "Command": []},`
+
+Lookup `EnumGenerator` in sources. For formatting you may look into `RFC-1459-ReplyCodes-Modified.txt`.
+For comparison go to [this gist](https://gist.github.com/AliveDevil/6672484) which shows the different steps to create an enum.
+
 ## Idea behind ##
 I want to create a IRC server which is independent of any external service (may be I'll write kind of plugin interface).
 
