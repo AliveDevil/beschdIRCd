@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die mit einer Assembly verknüpft sind.
 [assembly: AssemblyTitle("beschdIRC")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Just another IRC daemon software.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Fibre Network")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("beschdIRC")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
+[assembly: AssemblyCopyright("Copyright © AliveDevil 2013 (CC-BY-NC-SA 3.0)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

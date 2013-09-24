@@ -31,8 +31,10 @@ For comparison go to [this gist](https://gist.github.com/AliveDevil/6672484) whi
 I want to create a IRC server which is independent of any external service (may be I'll write kind of plugin interface).
 
 ## License ##
-.. is to be decided.
-Will look out for one.
+[![Creative Commons License](http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png)](http://creativecommons.org/licenses/by-nc-sa/3.0/)  
+beschdIRCd by [AliveDevil](https://github.com/AliveDevil) is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/).  
+Based on work at [https://github.com/AliveDevil/beschdIRCd](https://github.com/AliveDevil/beschdIRCd)
+If you're not happy with the decision of a license: keep your opinion. I won't mind.
 
 ## Contribution ##
 You may contribute so I can get forward in development but you're not forced to.
