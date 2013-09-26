@@ -23,7 +23,8 @@ namespace EnumGenerator {
 				}};
 				serialize(model);
 			} else {
-				bool @class = false;
+				bool @enum = false;
+				bool dictionary = false;
 				bool assembly = false;
 				string outputFile = "";
 				string file = "";
@@ -32,9 +33,13 @@ namespace EnumGenerator {
 					string arg = args[i].Replace("-", "").Replace("/", "");
 
 					switch (arg) {
-						case "c":
-						case "class":
-							@class = true;
+						case "e":
+						case "enum":
+							@enum = true;
+							break;
+						case "d":
+						case "dictionary":
+							dictionary = true;
 							break;
 						case "a":
 						case "assembly":
@@ -51,8 +56,8 @@ namespace EnumGenerator {
 					}
 				}
 
-				if (string.IsNullOrWhiteSpace(file) | !(@class ^ assembly)) {
-					Console.WriteLine("Input or (class|assembly) not specified. Review your command prompt and try again.");
+				if (string.IsNullOrWhiteSpace(file) | !(@enum ^ assembly ^ dictionary)) {
+					Console.WriteLine("Input or (class|assembly|dictionary) not specified. Review your command prompt and try again.");
 					return;
 				}
 				FileInfo fileInfo = new FileInfo(file);
@@ -60,20 +65,24 @@ namespace EnumGenerator {
 					Console.WriteLine("File {0} does not exist. Exiting.", fileInfo.FullName);
 					return;
 				}
-				FileInfo outputFileInfo = new FileInfo(outputFile);
-				if (outputFileInfo.Exists) {
-					Console.WriteLine("Output already exists. Overwrite?");
-					switch (Console.ReadLine()) {
-						case "n":
-							outputFile = null;
-							outputFileInfo = null;
-							break;
-						case "y":
-							outputFileInfo.Delete();
-							break;
+				FileInfo outputFileInfo = null;
+
+				if (!string.IsNullOrWhiteSpace(outputFile)) {
+					outputFileInfo = new FileInfo(outputFile);
+					if (outputFileInfo.Exists) {
+						Console.WriteLine("Output already exists. Overwrite?");
+						switch (Console.ReadLine()) {
+							case "n":
+								outputFile = null;
+								outputFileInfo = null;
+								break;
+							case "y":
+								outputFileInfo.Delete();
+								break;
+						}
 					}
 				}
-				if (@class) {
+				if (@enum) {
 					EnumModel model = deserialize(fileInfo);
 					if (model != null) {
 						StringBuilder builder = new StringBuilder();
@@ -109,6 +118,31 @@ namespace EnumGenerator {
 						}
 
 						builder.Append("}");
+						if (outputFileInfo != null)
+							using (FileStream fileStream = outputFileInfo.OpenWrite())
+							using (StreamWriter writer = new StreamWriter(fileStream))
+								writer.WriteLine(builder);
+						else
+							Console.Out.WriteLine(builder);
+					} else {
+						Console.WriteLine("Error while reading file.");
+						return;
+					}
+				}
+				if (dictionary) {
+					EnumModel model = deserialize(fileInfo);
+					if (model != null) {
+						StringBuilder builder = new StringBuilder();
+
+						// Create the dicionary.
+						builder.AppendFormat("public Dictionary<object, string> {0}LookUp = new Dictionary<object, string> {{\n", model.Name);
+
+						for (int i = 0; i < model.Items.Length; ++i) {
+
+							builder.AppendFormat("{{{0}.{1}, \"{2}\"}},\n", model.Name, model.Items[i].Name, model.Items[i].Remarks[0]);
+						}
+
+						builder.Append("};");
 						if (outputFileInfo != null)
 							using (FileStream fileStream = outputFileInfo.OpenWrite())
 							using (StreamWriter writer = new StreamWriter(fileStream))
