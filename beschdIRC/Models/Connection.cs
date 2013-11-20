@@ -12,6 +12,10 @@ using System.Threading.Tasks;
 
 namespace beschdIRC.Models {
 	public class Connection {
+		public string Username {
+			get;
+			set;
+		}
 		public string Nick {
 			get;
 			set;
@@ -78,7 +82,7 @@ namespace beschdIRC.Models {
 		private void reading() {
 			while (client.Connected && !cancelSource.IsCancellationRequested) {
 				if (lastPingTime - DateTime.Now < TimeSpan.FromMinutes(3)) {
-					if (netStream.DataAvailable) {
+					if (!reader.EndOfStream) {
 						server.ExecuteAction(this, reader.ReadLine());
 					} else {
 						Thread.Sleep(250);

@@ -158,6 +158,9 @@ namespace beschdIRC {
 		public void Run() {
 			LogAction("initializing", "Network Interfaces", initNetwork);
 		}
+		public void Log(string message) {
+			Trace.TraceInformation(message);
+		}
 		public void LogConnection(Connection connection, string message) {
 			Trace.TraceInformation(string.Format("{0} {1}", string.IsNullOrWhiteSpace(connection.Nick) ? connection.IPAddress.ToString() : connection.Nick, message));
 		}
@@ -173,9 +176,17 @@ namespace beschdIRC {
 			string text = errorMessages[errorCode];
 			foreach (KeyValuePair<string, string> item in resolve)
 				text = text.Replace("<" + item.Key + ">", item.Value);
-			connection.Send(string.Format("ERROR {0}", text));
+			connection.Send(string.Format("ERROR {0} {1}", (int)errorCode, text));
 		}
+		public void Reply(Connection connection, ReplyCodes replyCode, Dictionary<string, string> resolve) {
+			string text = replyMessages[replyCode];
+			foreach (KeyValuePair<string, string> item in resolve)
+				text = text.Replace("<" + item.Key + ">", item.Value);
+			connection.Send(string.Format(":{0} {1} {2} :{3}", Settings.Name, (int)replyCode, connection.Nick, text));
+		}
+
 		public void ExecuteAction(Connection connection, string line) {
+			Log(line);
 			string[] command = line.Split(' ');
 			switch (command[0].ToLowerInvariant()) {
 				case "pass":
@@ -186,6 +197,9 @@ namespace beschdIRC {
 					break;
 				case "pong":
 					pongConnection(connection, command.Skip(1).ToArray());
+					break;
+				case "user":
+					userConnection(connection, command.Skip(1).ToArray());
 					break;
 
 				case "quit":
@@ -291,7 +305,24 @@ namespace beschdIRC {
 			else
 				connection.Away = false;
 		}
-
+		/// <summary>
+		/// Authenticates user.
+		/// </summary>
+		/// <param name="connection"></param>
+		/// <param name="args"></param>
+		private void userConnection(Connection connection, params string[] args) {
+			if (args.Length > 3) {
+				connection.Username = args[0];
+				connection.Hostname = args[1];
+				connection.Servername = args[2];
+				connection.Realname = string.Concat(args.Skip(3));
+				if (connection.Realname.StartsWith(":"))
+					connection.Realname = connection.Realname.Substring(1);
+				LogConnection(connection, string.Format("Set User to {{Username: {0}, Hostname: {1}, Servername: {2}, Realname: {3}}}", connection.Nick, connection.Hostname, connection.Servername, connection.Realname));
+			} else {
+				Error(connection, ErrorCodes.NEEDMOREPARAMS, new Dictionary<string, string> { { "command", "USER" } });
+			}
+		}
 
 		private void initNetwork() {
 			connections = new List<Connection>();
