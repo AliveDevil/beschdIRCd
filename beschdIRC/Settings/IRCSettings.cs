@@ -10,63 +10,57 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace beschdIRC.Settings {
+namespace beschdIRC.Settings
+{
 	[DataContract]
-	public class IRCSettings : ISetting {
-		public string Name {
-			get {
+	public class IRCSettings : ISetting
+	{
+		public string Name
+		{
+			get
+			{
 				return "IRCSettings";
 			}
 		}
 
 		[DataMember]
-		public string ServerName {
-			get;
-			set;
-		}
+		public string ServerName { get; set; }
 		[DataMember]
-		public string WelcomeMessage {
-			get;
-			set;
-		}
+		public string WelcomeMessage { get; set; }
 		[DataMember]
-		public string ServerAddress {
-			get;
-			set;
-		}
+		public string ServerAddress { get; set; }
 		[DataMember]
-		public string Address {
-			get;
-			set;
-		}
+		public string Address { get; set; }
 		[DataMember]
-		public int Port {
-			get;
-			set;
-		}
+		public int Port { get; set; }
 
 
-		public void Save() {
+		public void Save()
+		{
 			FileInfo fI = new FileInfo(Name + ".xconf");
 
 			if (fI.Exists)
 				fI.Delete();
 
-			using (FileStream fS = fI.Open(FileMode.Create, FileAccess.Write, FileShare.None)) {
+			using (FileStream fS = fI.Open(FileMode.Create, FileAccess.Write, FileShare.None))
+			{
 				DataContractJsonSerializer serializer = new DataContractJsonSerializer(this.GetType());
 				serializer.WriteObject(fS, this);
 			}
 		}
-		public void Load() {
+		public void Load()
+		{
 			FileInfo fI = new FileInfo(Name + ".xconf");
 
 			Default();
-			if (!fI.Exists) {
+			if (!fI.Exists)
+			{
 				Save();
 				return;
 			}
 
-			using (FileStream fS = fI.Open(FileMode.Open, FileAccess.Read, FileShare.None)) {
+			using (FileStream fS = fI.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+			{
 				DataContractJsonSerializer serializer = new DataContractJsonSerializer(this.GetType());
 				IRCSettings settings = (IRCSettings)serializer.ReadObject(fS);
 				PropertyInfo[] properties = settings.GetType().GetProperties();
@@ -75,10 +69,12 @@ namespace beschdIRC.Settings {
 						properties[i].SetValue(this, properties[i].GetValue(settings));
 			}
 		}
-		public void Reset() {
+		public void Reset()
+		{
 			Default();
 		}
-		public void Default() {
+		public void Default()
+		{
 			ServerName = "beschdIRC Daemon";
 			WelcomeMessage = "Welcome to this IRC Server running beschdIRC Daemon.";
 			ServerAddress = "localhost";

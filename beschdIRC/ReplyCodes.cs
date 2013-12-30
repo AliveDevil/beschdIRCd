@@ -1,5 +1,7 @@
-namespace beschdIRC {
-	public enum ReplyCodes {
+namespace beschdIRC
+{
+	public enum ReplyCodes
+	{
 		/// <summary>
 		/// 
 		/// </summary>

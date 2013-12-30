@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace beschdIRC.Settings {
-	public interface ISetting {
-		string Name {
+namespace beschdIRC.Settings
+{
+	public interface ISetting
+	{
+		string Name
+		{
 			get;
 		}
 		void Save();
