@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Immutable;
+using System.Runtime.Serialization;
 
 namespace EnumGenerator
 {
@@ -8,7 +9,7 @@ namespace EnumGenerator
 		[DataMember]
 		public string Name { get; set; }
 		[DataMember]
-		public EnumItemModel[] Items { get; set; }
+		public ImmutableList<EnumItemModel> Items { get; set; }
 	}
 
 	/// <summary>
