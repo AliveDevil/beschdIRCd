@@ -32,13 +32,13 @@ namespace EnumGenerator
 		/// The commands which may return this result.
 		/// </summary>
 		[DataMember]
-		public string[] Command { get; set; }
+		public ImmutableList<string> Command { get; set; }
 		/// <summary>
 		/// What to know before using this?
 		/// One item is one line.
 		/// </summary>
 		[DataMember]
-		public string[] Remarks { get; set; }
+		public ImmutableList<string> Remarks { get; set; }
 		/// <summary>
 		/// Short description
 		/// </summary>
@@ -48,6 +48,6 @@ namespace EnumGenerator
 		/// ReplyCode or ErrorCode.
 		/// </summary>
 		[DataMember]
-		public string[] Results { get; set; }
+		public ImmutableList<string> Results { get; set; }
 	}
 }
