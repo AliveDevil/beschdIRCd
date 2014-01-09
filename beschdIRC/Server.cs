@@ -201,7 +201,8 @@ namespace beschdIRC {
 				case "user":
 					userConnection(connection, command.Skip(1).ToArray());
 					break;
-
+				case "join":
+					break;
 				case "quit":
 					quitConnection(connection, command.Skip(1).ToArray());
 					break;
@@ -321,6 +322,18 @@ namespace beschdIRC {
 				LogConnection(connection, string.Format("Set User to {{Username: {0}, Hostname: {1}, Servername: {2}, Realname: {3}}}", connection.Nick, connection.Hostname, connection.Servername, connection.Realname));
 			} else {
 				Error(connection, ErrorCodes.NEEDMOREPARAMS, new Dictionary<string, string> { { "command", "USER" } });
+			}
+		}
+		/// <summary>
+		/// User joins channel.
+		/// </summary>
+		/// <param name="connection"></param>
+		/// <param name="args"></param>
+		private void joinConnection(Connection connection, params string[] args) {
+			if (args.Length > 0) {
+				
+			} else {
+				Error(connection, ErrorCodes.NEEDMOREPARAMS, new Dictionary<string, string> { { "command", "JOIN" } });
 			}
 		}
 
