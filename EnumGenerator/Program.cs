@@ -4,13 +4,17 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Web;
 
-namespace EnumGenerator {
+namespace EnumGenerator
+{
 	/// <summary>
 	/// This will create a enum out of a json file.
 	/// </summary>
-	class Program {
-		static void Main(string[] args) {
-			if (args.Length == 0) {
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			if (args.Length == 0)
+			{
 				EnumModel model = new EnumModel();
 				model.Name = "Template";
 				model.Items = new[] {new EnumItemModel() {
@@ -22,17 +26,21 @@ namespace EnumGenerator {
 					Results = new[] { "Nothing" }
 				}};
 				serialize(model);
-			} else {
+			}
+			else
+			{
 				bool @enum = false;
 				bool dictionary = false;
 				bool assembly = false;
 				string outputFile = "";
 				string file = "";
 
-				for (int i = 0; i < args.Length; ++i) {
+				for (int i = 0; i < args.Length; ++i)
+				{
 					string arg = args[i].Replace("-", "").Replace("/", "");
 
-					switch (arg) {
+					switch (arg)
+					{
 						case "e":
 						case "enum":
 							@enum = true;
@@ -56,22 +64,27 @@ namespace EnumGenerator {
 					}
 				}
 
-				if (string.IsNullOrWhiteSpace(file) | !(@enum ^ assembly ^ dictionary)) {
+				if (string.IsNullOrWhiteSpace(file) | !(@enum ^ assembly ^ dictionary))
+				{
 					Console.WriteLine("Input or (class|assembly|dictionary) not specified. Review your command prompt and try again.");
 					return;
 				}
 				FileInfo fileInfo = new FileInfo(file);
-				if (!fileInfo.Exists) {
+				if (!fileInfo.Exists)
+				{
 					Console.WriteLine("File {0} does not exist. Exiting.", fileInfo.FullName);
 					return;
 				}
 				FileInfo outputFileInfo = null;
 
-				if (!string.IsNullOrWhiteSpace(outputFile)) {
+				if (!string.IsNullOrWhiteSpace(outputFile))
+				{
 					outputFileInfo = new FileInfo(outputFile);
-					if (outputFileInfo.Exists) {
+					if (outputFileInfo.Exists)
+					{
 						Console.WriteLine("Output already exists. Overwrite?");
-						switch (Console.ReadLine()) {
+						switch (Console.ReadLine())
+						{
 							case "n":
 								outputFile = null;
 								outputFileInfo = null;
@@ -82,15 +95,18 @@ namespace EnumGenerator {
 						}
 					}
 				}
-				if (@enum) {
+				if (@enum)
+				{
 					EnumModel model = deserialize(fileInfo);
-					if (model != null) {
+					if (model != null)
+					{
 						StringBuilder builder = new StringBuilder();
 
 						// Create the enum.
 						builder.AppendFormat("public enum {0} {{\n", model.Name);
 
-						for (int i = 0; i < model.Items.Length; ++i) {
+						for (int i = 0; i < model.Items.Length; ++i)
+						{
 							// Create summary-entry for Documentation.
 							// Have to be HTML-Encoded.
 							builder.AppendFormat("/// <summary>\n" +
@@ -100,17 +116,20 @@ namespace EnumGenerator {
 							// Create remarks-section for Documentation.
 							// Have to be HTML-Encoded
 							builder.AppendLine("///<remarks>");
-							for (int j = 0; j < model.Items[i].Remarks.Length; ++j) {
+							for (int j = 0; j < model.Items[i].Remarks.Length; ++j)
+							{
 								builder.AppendFormat("/// <para>{0}</para>\n", HttpUtility.HtmlEncode(model.Items[i].Remarks[j]));
 							}
 							builder.AppendLine("/// <para>Can be invoked by:</para>");
-							for (int j = 0; j < model.Items[i].Command.Length; ++j) {
+							for (int j = 0; j < model.Items[i].Command.Length; ++j)
+							{
 								builder.AppendFormat("/// <para>{0}</para>\n", HttpUtility.HtmlEncode(model.Items[i].Command[j]));
 							}
 							builder.AppendLine("///</remarks>");
 
 							// create the exceptions.
-							for (int j = 0; j < model.Items[i].Results.Length; ++j) {
+							for (int j = 0; j < model.Items[i].Results.Length; ++j)
+							{
 								builder.AppendFormat("/// <exception cref=\"{0}\" />\n", HttpUtility.HtmlEncode(model.Items[i].Results[j]));
 							}
 
@@ -124,20 +143,25 @@ namespace EnumGenerator {
 								writer.WriteLine(builder);
 						else
 							Console.Out.WriteLine(builder);
-					} else {
+					}
+					else
+					{
 						Console.WriteLine("Error while reading file.");
 						return;
 					}
 				}
-				if (dictionary) {
+				if (dictionary)
+				{
 					EnumModel model = deserialize(fileInfo);
-					if (model != null) {
+					if (model != null)
+					{
 						StringBuilder builder = new StringBuilder();
 
 						// Create the dicionary.
 						builder.AppendFormat("public Dictionary<object, string> {0}LookUp = new Dictionary<object, string> {{\n", model.Name);
 
-						for (int i = 0; i < model.Items.Length; ++i) {
+						for (int i = 0; i < model.Items.Length; ++i)
+						{
 
 							builder.AppendFormat("{{{0}.{1}, \"{2}\"}},\n", model.Name, model.Items[i].Name, model.Items[i].Remarks[0]);
 						}
@@ -149,31 +173,38 @@ namespace EnumGenerator {
 								writer.WriteLine(builder);
 						else
 							Console.Out.WriteLine(builder);
-					} else {
+					}
+					else
+					{
 						Console.WriteLine("Error while reading file.");
 						return;
 					}
 				}
-				if (assembly) {
+				if (assembly)
+				{
 					Console.WriteLine("Assembly is not implemented. To be finished.");
 					return;
 				}
 			}
 		}
 
-		static void serialize(EnumModel model) {
+		static void serialize(EnumModel model)
+		{
 			FileInfo fileInfo = new FileInfo(model.Name + ".json");
 
 			if (fileInfo.Exists)
 				fileInfo.Delete();
 
-			using (FileStream fileStream = fileInfo.OpenWrite()) {
+			using (FileStream fileStream = fileInfo.OpenWrite())
+			{
 				DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(EnumModel));
 				serializer.WriteObject(fileStream, model);
 			}
 		}
-		static EnumModel deserialize(FileInfo fileInfo) {
-			using (FileStream fileStream = fileInfo.OpenRead()) {
+		static EnumModel deserialize(FileInfo fileInfo)
+		{
+			using (FileStream fileStream = fileInfo.OpenRead())
+			{
 				DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(EnumModel));
 				return serializer.ReadObject(fileStream) as EnumModel;
 			}

@@ -14,8 +14,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace beschdIRC {
-	public class Server {
+namespace beschdIRC
+{
+	public class Server
+	{
 		#region Error-Messages
 		Dictionary<ErrorCodes, string> errorMessages = new Dictionary<ErrorCodes, string> {
 			{ErrorCodes.NOSUCHNICK, "<nickname> :No such nick/channel"},
@@ -151,11 +153,13 @@ namespace beschdIRC {
 		List<Connection> connections;
 		TcpListener listener;
 
-		public void Initialize() {
+		public void Initialize()
+		{
 			LogAction("loading", "settings", loadSettings);
 			LogAction("loading", "database", initDatabase);
 		}
-		public void Run() {
+		public void Run()
+		{
 			LogAction("initializing", "Network Interfaces", initNetwork);
 		}
 		public void Log(string message) {
@@ -164,15 +168,18 @@ namespace beschdIRC {
 		public void LogConnection(Connection connection, string message) {
 			Trace.TraceInformation(string.Format("{0} {1}", string.IsNullOrWhiteSpace(connection.Nick) ? connection.IPAddress.ToString() : connection.Nick, message));
 		}
-		public void LogAction(string prefix, string name, Action action) {
+		public void LogAction(string prefix, string name, Action action)
+		{
 			Trace.TraceInformation("{0} {1}", prefix, name);
 			action();
 			Trace.TraceInformation("done: {0} {1}", prefix, name);
 		}
-		public void Disconnect(Connection connection) {
+		public void Disconnect(Connection connection)
+		{
 			connections.Remove(connection);
 		}
-		public void Error(Connection connection, ErrorCodes errorCode, Dictionary<string, string> resolve) {
+		public void Error(Connection connection, ErrorCodes errorCode, Dictionary<string, string> resolve)
+		{
 			string text = errorMessages[errorCode];
 			foreach (KeyValuePair<string, string> item in resolve)
 				text = text.Replace("<" + item.Key + ">", item.Value);
@@ -188,7 +195,8 @@ namespace beschdIRC {
 		public void ExecuteAction(Connection connection, string line) {
 			Log(line);
 			string[] command = line.Split(' ');
-			switch (command[0].ToLowerInvariant()) {
+			switch (command[0].ToLowerInvariant())
+			{
 				case "pass":
 					passConnection(connection, command.Skip(1).ToArray());
 					break;
@@ -211,14 +219,17 @@ namespace beschdIRC {
 					Trace.TraceWarning(line);
 					break;
 			}
-			if (command[0].StartsWith(":")) {
-				if (connection.Nick.ToLowerInvariant() == command[0].Substring(1).ToLowerInvariant()) {
+			if (command[0].StartsWith(":"))
+			{
+				if (connection.Nick.ToLowerInvariant() == command[0].Substring(1).ToLowerInvariant())
+				{
 					ExecuteAction(connection, string.Join(" ", command.Skip(1)));
 				}
 			}
 		}
 
-		public bool HasNick(string nick) {
+		public bool HasNick(string nick)
+		{
 			return connections.Any(item => item.Nick != null && item.Nick.ToLowerInvariant() == nick.ToLowerInvariant());
 		}
 
@@ -232,15 +243,22 @@ namespace beschdIRC {
 		/// <remarks>
 		/// <para>Issued by /PASS &lt;password&gt;</para>
 		/// </remarks>
-		private void passConnection(Connection connection, params string[] args) {
-			if (args.Length > 0) {
-				if (!connection.Registered) {
+		private void passConnection(Connection connection, params string[] args)
+		{
+			if (args.Length > 0)
+			{
+				if (!connection.Registered)
+				{
 					LogConnection(connection, "set password");
 					connection.Pass = args[0];
-				} else {
+				}
+				else
+				{
 					Error(connection, ErrorCodes.ALREADYREGISTRED, new Dictionary<string, string>());
 				}
-			} else {
+			}
+			else
+			{
 				Error(connection, ErrorCodes.NEEDMOREPARAMS, new Dictionary<string, string> { { "command", "PASS" } });
 			}
 		}
@@ -254,15 +272,22 @@ namespace beschdIRC {
 		/// <remarks>
 		/// <para>Issued by /NICK &lt;nickname&gt;</para>
 		/// </remarks>
-		private void nickConnection(Connection connection, params string[] args) {
-			if (args.Length > 0) {
-				if (!HasNick(args[0])) {
+		private void nickConnection(Connection connection, params string[] args)
+		{
+			if (args.Length > 0)
+			{
+				if (!HasNick(args[0]))
+				{
 					LogConnection(connection, "set nick to " + args[0]);
 					connection.Nick = args[0];
-				} else {
+				}
+				else
+				{
 					Error(connection, ErrorCodes.NICKNAMEINUSE, new Dictionary<string, string> { { "nickname", args[0] } });
 				}
-			} else {
+			}
+			else
+			{
 				Error(connection, ErrorCodes.NEEDMOREPARAMS, new Dictionary<string, string> { { "command", "NICK" } });
 			}
 		}
@@ -276,7 +301,8 @@ namespace beschdIRC {
 		/// <remarks>
 		/// Issued by /PONG
 		/// </remarks>
-		private void pongConnection(Connection connection, params string[] args) {
+		private void pongConnection(Connection connection, params string[] args)
+		{
 			LogConnection(connection, "is alive");
 			connection.Ping();
 		}
@@ -288,10 +314,14 @@ namespace beschdIRC {
 		/// <remarks>
 		/// Issued by QUIT &lt;QuitMessage&gt;
 		/// </remarks>
-		private void quitConnection(Connection connection, params string[] args) {
-			if (args.Length > 0) {
+		private void quitConnection(Connection connection, params string[] args)
+		{
+			if (args.Length > 0)
+			{
 				connection.Disconnect(string.Join(" ", args));
-			} else {
+			}
+			else
+			{
 				connection.Disconnect();
 			}
 		}
@@ -300,7 +330,8 @@ namespace beschdIRC {
 		/// </summary>
 		/// <param name="connection"></param>
 		/// <param name="args"></param>
-		private void awayConnection(Connection connection, params string[] args) {
+		private void awayConnection(Connection connection, params string[] args)
+		{
 			if (args.Length > 0)
 				connection.Away = true;
 			else
@@ -331,32 +362,37 @@ namespace beschdIRC {
 		/// <param name="args"></param>
 		private void joinConnection(Connection connection, params string[] args) {
 			if (args.Length > 0) {
-				
+
 			} else {
 				Error(connection, ErrorCodes.NEEDMOREPARAMS, new Dictionary<string, string> { { "command", "JOIN" } });
 			}
 		}
 
-		private void initNetwork() {
+		private void initNetwork()
+		{
 			connections = new List<Connection>();
 			listener = new TcpListener(IPAddress.Parse(Settings.Address), Settings.Port);
 			listener.Start();
 			listener.BeginAcceptTcpClient(acceptTcp, null);
 		}
-		private void acceptTcp(IAsyncResult result) {
+		private void acceptTcp(IAsyncResult result)
+		{
 			TcpClient client = listener.EndAcceptTcpClient(result);
 			Trace.TraceInformation("New Connection of IP {0}", client.Client.RemoteEndPoint);
 			connections.Add(new Connection(this, client));
 			listener.BeginAcceptTcpClient(acceptTcp, null);
 		}
-		private void initDatabase() {
-			using (DatabaseContext database = new DatabaseContext()) {
+		private void initDatabase()
+		{
+			using (DatabaseContext database = new DatabaseContext())
+			{
 				MigrateDatabaseToLatestVersion<DatabaseContext, Configuration> migrate = new MigrateDatabaseToLatestVersion<DatabaseContext, Configuration>();
 				Database.SetInitializer<DatabaseContext>(migrate);
 				migrate.InitializeDatabase(database);
 			}
 		}
-		private void loadSettings() {
+		private void loadSettings()
+		{
 			Settings = new IRCSettings();
 			Settings.Load();
 		}

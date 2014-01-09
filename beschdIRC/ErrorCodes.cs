@@ -1,5 +1,7 @@
-namespace beschdIRC {
-	public enum ErrorCodes {
+namespace beschdIRC
+{
+	public enum ErrorCodes
+	{
 		/// <summary>
 		/// Used to indicate the nickname parameter supplied to a command is currently unused.
 		/// </summary>

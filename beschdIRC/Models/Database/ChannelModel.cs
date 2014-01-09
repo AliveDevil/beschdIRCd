@@ -6,47 +6,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace beschdIRC.Models.Database {
+namespace beschdIRC.Models.Database
+{
 	[Table("Channel")]
-	public class ChannelModel {
+	public class ChannelModel
+	{
 		[Key]
 		[DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]
-		public int Id {
-			get;
-			set;
-		}
-		public string Name {
-			get;
-			set;
-		}
-		public bool InviteOnly {
-			get;
-			set;
-		}
-		public bool Moderated {
-			get;
-			set;
-		}
-		public bool Invisible {
-			get;
-			set;
-		}
-		public string Password {
-			get;
-			set;
-		}
-		public string Topic {
-			get;
-			set;
-		}
-		public string Connect {
-			get;
-			set;
-		}
+		public int Id { get; set; }
+		public string Name { get; set; }
+		public bool InviteOnly { get; set; }
+		public bool Moderated { get; set; }
+		public bool Invisible { get; set; }
+		public string Password { get; set; }
+		public string Topic { get; set; }
+		public string Connect { get; set; }
 
-		public virtual IEnumerable<ChannelUserModel> UserInformation {
-			get;
-			set;
-		}
+		public virtual IEnumerable<ChannelUserModel> UserInformation { get; set; }
 	}
 }
